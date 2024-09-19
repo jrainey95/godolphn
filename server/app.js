@@ -1,35 +1,31 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
-var passport = require("passport");
-var crypto = require("crypto");
-var routes = require("./routes");
+const passport = require("passport");
+const cors = require("cors");
+const MongoStore = require("connect-mongo")(session);
+const routes = require("./routes");
 const connection = require("./config/database");
 
-// Package documentation - https://www.npmjs.com/package/connect-mongo
-const MongoStore = require("connect-mongo")(session);
-
-// Need to require the entire Passport config module so app.js knows about it
-require("./config/passport");
-
-
-
-/**
- * -------------- GENERAL SETUP ----------------
- */
-
-// Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
+// Load environment variables from .env file
 require("dotenv").config();
 
-// Create the Express application
-var app = express();
+// Initialize the Express application
+const app = express();
 
+// Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/**
- * -------------- SESSION SETUP ----------------
- */
+// Configure CORS
+app.use(
+  cors({
+    origin: "http://localhost:3001", // Adjust this to the actual frontend URL
+    credentials: true, // Allow credentials (cookies, etc.)
+  })
+);
+
+// Session setup
 const sessionStore = new MongoStore({
   mongooseConnection: connection,
   collection: "sessions",
@@ -37,42 +33,43 @@ const sessionStore = new MongoStore({
 
 app.use(
   session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true,
+    secret: process.env.SECRET, // Secret for signing the session ID cookie
+    resave: false, // Do not save session if unmodified
+    saveUninitialized: true, // Save uninitialized sessions
     store: sessionStore,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 60 * 24, // Session cookie expiration (24 hours)
+      // secure: true, // Uncomment if using HTTPS
+      // sameSite: 'strict', // Uncomment to prevent CSRF attacks
     },
   })
 );
 
-// TODO
+// Initialize Passport.js for authentication
+app.use(passport.initialize());
+app.use(passport.session());
 
-/**
- * -------------- PASSPORT AUTHENTICATION ----------------
- */
+// Import Passport configuration
 require("./config/passport");
 
+// Logging for debugging
 app.use((req, res, next) => {
   console.log(req.session);
   console.log(req.user);
   next();
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-/**
- * -------------- ROUTES ----------------
- */
-
-// Imports all of the routes from ./routes/index.js
+// Route handling
 app.use(routes);
 
-/**
- * -------------- SERVER ----------------
- */
+// Global error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
 
-// Server listens on http://localhost:3000
-app.listen(3000);
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

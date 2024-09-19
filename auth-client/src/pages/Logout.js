@@ -1,21 +1,25 @@
-import React from "react";
-import axios from "axios";
+// src/components/LogoutPage.js
+import { useEffect } from "react";
+import { logout } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 
-function Logout({ setUser }) {
+function LogoutPage() {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await axios.get("/logout", { withCredentials: true });
-      setUser(null);
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out", error);
-    }
-  };
+  useEffect(() => {
+    const performLogout = async () => {
+      try {
+        await logout();
+        navigate("/");
+      } catch (err) {
+        console.log("Error logging out", err);
+      }
+    };
 
-  return <button onClick={handleLogout}>Logout</button>;
+    performLogout();
+  }, [navigate]);
+
+  return <p>Logging out...</p>;
 }
 
-export default Logout;
+export default LogoutPage;

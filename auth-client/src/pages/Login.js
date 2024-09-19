@@ -1,23 +1,21 @@
-import React, { useState } from "react";
-import axios from "axios";
+// src/components/LoginPage.js
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../api/auth";
 
-function Login({ setUser }) {
+function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post("/login", {
-        uname: username,
-        pw: password,
-      });
-      setUser(response.data.user); // Assuming API returns the user object on successful login
+      await login(username, password);
       navigate("/account");
-    } catch (error) {
-      console.error("There was an error logging in!", error);
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
     }
   };
 
@@ -25,24 +23,29 @@ function Login({ setUser }) {
     <div>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
+        <label htmlFor="username">Username</label>
         <input
           type="text"
+          id="username"
+          name="username" // Add name attribute
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter Username"
-          required
         />
+        <label htmlFor="password">Password</label>
         <input
           type="password"
+          id="password"
+          name="password" // Add name attribute
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter Password"
-          required
         />
         <button type="submit">Login</button>
       </form>
+      {error && <p>{error}</p>}
     </div>
   );
 }
 
-export default Login;
+export default LoginPage;

@@ -1,52 +1,47 @@
-// src/pages/Register.js
-import React, { useState } from "react";
-import axios from "axios";
+// src/components/RegisterPage.js
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { register } from "../api/auth";
 
-const Register = () => {
+function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/register", {
-        uname: username,
-        pw: password,
-      });
-      alert("Registration successful");
-    } catch (error) {
-      console.error("There was an error registering!", error);
-      alert("Registration failed");
+      await register(username, password);
+      navigate("/login"); // Navigate to login page on successful registration
+    } catch (err) {
+      setError("Registration failed. Try a different username."); // Display error message if registration fails
     }
   };
 
   return (
     <div>
-      <h1>Register Page</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoComplete="username" // Added autocomplete attribute
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password" // Added autocomplete attribute
+        />
         <button type="submit">Register</button>
       </form>
+      {error && <p>{error}</p>}
     </div>
   );
-};
+}
 
-export default Register;
+export default RegisterPage;

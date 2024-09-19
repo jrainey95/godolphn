@@ -41,7 +41,7 @@ router.post("/register", (req, res, next) => {
 });
 
 
-router.post("/logout", (req, res, next) => {
+router.post("/logout", isAuth, (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
@@ -85,7 +85,19 @@ router.get("/register", (req, res, next) => {
  * Google Search: "How to use Express Passport Local Strategy"
  *
  * Also, look up what behaviour express session has without a maxage set
+ * 
+ * 
+ * 
  */
+
+router.get("/account", isAuth, (req, res, next) => {
+  console.log("Account route accessed");
+  res.json({ username: req.user.username, admin: req.user.admin });
+});
+
+
+
+
 router.get("/protected-route", isAuth, (req, res, next) => {
   res.send("You made it to the route");
 });
