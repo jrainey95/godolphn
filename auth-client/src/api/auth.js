@@ -34,15 +34,12 @@ export const register = async (username, password) => {
 };
 
 // Logout user
-export const logout = async (username, password) => {
+// Logout user
+export const logout = async () => {
   try {
-    const response = await API.get("/account", {
-      uname: username,
-      pw: password,
-      withCredentials: true, 
+    const response = await API.post("/api/logout", {}, { // Use POST and empty body
+      withCredentials: true,
     });
-   
-
     return response.data; // This should give you the logout message
   } catch (error) {
     console.error("Error during logout:", error);
