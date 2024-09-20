@@ -50,7 +50,7 @@ router.post("/register", (req, res, next) => {
 });
 
 // Logout user
-router.post("/api/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   console.log("Before logout - Session:", req.session); // Log session before logout
   req.logout();
   req.session.destroy((err) => {

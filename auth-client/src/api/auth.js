@@ -37,7 +37,7 @@ export const register = async (username, password) => {
 // Logout user
 export const logout = async () => {
   try {
-    const response = await API.post("/api/logout", {}, { // Use POST and empty body
+    const response = await API.post("/logout", {}, { // Use POST and empty body
       withCredentials: true,
     });
     return response.data; // This should give you the logout message
