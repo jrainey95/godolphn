@@ -21,15 +21,18 @@ function AccountPage() {
     fetchAccount();
   }, []);
 
- const handleLogout = async () => {
-   try {
-     const response = await logout(); // Call the logout function
-     console.log("Logout success:", response); // Log the response
-     navigate("/"); // Redirect to home or login page after logout
-   } catch (err) {
-     setError("Logout failed. Try again later."); // Handle errors
-   }
- };
+const handleLogout = async () => {
+  try {
+    await logout(); // Call the logout function
+    console.log("Logout success");
+    navigate("/"); // Ensure this points to the correct home route
+  } catch (err) {
+    setError("Logout failed. Try again later.");
+  }
+};
+
+
+
 
 
   return (

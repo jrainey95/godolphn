@@ -33,13 +33,13 @@ const strategy = new LocalStrategy(customFields, verifyCallback);
 passport.use(strategy);
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user.id); // Store user ID in session
 });
 
-passport.deserializeUser((userId, done) => {
-  User.findById(userId)
-    .then((user) => {
-      done(null, user);
-    })
-    .catch(err => done(err));
+passport.deserializeUser((id, done) => {
+  // Fetch user from DB using the ID stored in session
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
 });
+

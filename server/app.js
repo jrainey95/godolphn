@@ -35,13 +35,9 @@ app.use(
   session({
     secret: process.env.SECRET, // Secret for signing the session ID cookie
     resave: false, // Do not save session if unmodified
-    saveUninitialized: true, // Save uninitialized sessions
+    saveUninitialized: false, // Save uninitialized sessions
     store: sessionStore,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // Session cookie expiration (24 hours)
-      // secure: true, // Uncomment if using HTTPS
-      // sameSite: 'strict', // Uncomment to prevent CSRF attacks
-    },
+    cookie: { secure: false },
   })
 );
 

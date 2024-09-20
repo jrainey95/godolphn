@@ -1,7 +1,7 @@
 // src/components/LoginPage.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
+import { login } from "../api/auth"; // Import the login function
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -12,8 +12,8 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(username, password);
-      navigate("/account");
+      await login(username, password); // Call the login function here
+      navigate("/account"); // Redirect to the account page after successful login
     } catch (err) {
       setError("Login failed. Please check your credentials.");
     }
@@ -23,20 +23,14 @@ function LoginPage() {
     <div>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
         <input
           type="text"
-          id="username"
-          name="username" // Add name attribute
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <label htmlFor="password">Password</label>
         <input
           type="password"
-          id="password"
-          name="password" // Add name attribute
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

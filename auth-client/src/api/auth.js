@@ -1,4 +1,3 @@
-// src/api/auth.js
 import axios from "axios";
 
 const API = axios.create({
@@ -35,33 +34,23 @@ export const register = async (username, password) => {
 };
 
 // Logout user
-export const logout = async () => {
+export const logout = async (username, password) => {
   try {
-    const response = await API.post("/logout");
-    console.log("Logout response:", response.data); // Log the response for debugging
-    return response.data; // Return the success message
+    const response = await API.get("/account", {
+      uname: username,
+      pw: password,
+      withCredentials: true, 
+    });
+   
+
+    return response.data; // This should give you the logout message
   } catch (error) {
-    console.error("Error logging out:", error);
-    throw error;
+    console.error("Error during logout:", error);
+    throw new Error("Logout failed"); // Handle error
   }
 };
-
 
 // Get account details
-export const updateAccount = async (username, email) => {
-  try {
-    const response = await API.put("/account", {
-      uname: username,
-      email: email,
-    });
-    return response.data; // Handle success data if needed
-  } catch (error) {
-    console.error("Error updating account:", error);
-    throw error;
-  }
-};
-
-
 export const getAccount = async () => {
   try {
     const response = await API.get("/account"); // Ensure this matches your backend API endpoint

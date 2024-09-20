@@ -1,25 +1,25 @@
-// src/components/LogoutPage.js
-import { useEffect } from "react";
-import { logout } from "../api/auth";
-import { useNavigate } from "react-router-dom";
+// // src/components/LogoutPage.js
+// import { useEffect } from "react";
+// import { logout } from "../api/auth";
+// import { useNavigate } from "react-router-dom";
 
-function LogoutPage() {
-  const navigate = useNavigate();
+// function LogoutPage() {
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    const performLogout = async () => {
-      try {
-        await logout();
-        navigate("/");
-      } catch (err) {
-        console.log("Error logging out", err);
-      }
-    };
+//   useEffect(() => {
+//     const performLogout = async () => {
+//       try {
+//         await logout();
+//         navigate("/");
+//       } catch (err) {
+//         console.log("Error logging out", err);
+//       }
+//     };
 
-    performLogout();
-  }, [navigate]);
+//     performLogout();
+//   }, [navigate]);
 
-  return <p>Logging out...</p>;
-}
+//   return <p>Logging out...</p>;
+// }
 
-export default LogoutPage;
+// export default LogoutPage;
