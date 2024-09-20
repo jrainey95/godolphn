@@ -136,8 +136,13 @@ router.get("/register", (req, res, next) => {
 
 router.get("/account", isAuth, (req, res, next) => {
   console.log("Account route accessed");
-  res.json({ username: req.user.username, admin: req.user.admin });
+  res.json({
+    username: req.user.username,
+    admin: req.user.admin,
+    savedHorses: req.user.savedHorses, // Include saved horses
+  });
 });
+
 
 // Other routes...
 module.exports = router;
