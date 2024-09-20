@@ -13,7 +13,7 @@ function AccountPage() {
     const fetchAccount = async () => {
       try {
         const account = await getAccount();
-        setCurrentUsername(account.username); // Adjust based on the response structure
+        setCurrentUsername(account.username);
       } catch (err) {
         setError("Failed to load account details.");
       }
@@ -21,25 +21,26 @@ function AccountPage() {
     fetchAccount();
   }, []);
 
-const handleLogout = async () => {
-  try {
-    await logout(); // Call the logout function
-    console.log("Logout success");
-    navigate("/"); // Ensure this points to the correct home route
-  } catch (err) {
-    setError("Logout failed. Try again later.");
-  }
-};
+  const handleLogout = async () => {
+    try {
+      await logout();
+      console.log("Logout success");
+      navigate("/");
+    } catch (err) {
+      setError("Logout failed. Try again later.");
+    }
+  };
 
-
-
-
+  const goToHorses = () => {
+    navigate("/horses"); // Navigate to the Horses page
+  };
 
   return (
     <div>
       <h1>Account</h1>
       <p>Username: {currentUsername}</p>
       <button onClick={handleLogout}>Logout</button>
+      <button onClick={goToHorses}>View Horses</button> {/* New button */}
       {error && <p>{error}</p>}
     </div>
   );

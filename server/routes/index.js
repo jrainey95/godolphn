@@ -11,6 +11,8 @@ const isAdmin = require("./authMiddleware").isAdmin;
  */
 
 // Login user
+
+
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -61,10 +63,54 @@ router.post("/logout", (req, res) => {
     res.status(200).json({ message: "Logout successful" });
   });
 });
+// routes/index.js
+const getCurrentUser = (req) => {
+  if (req.isAuthenticated()) {
+    return req.user; // User should be attached to req.user after Passport.js authentication
+  } else {
+    return null; // Not authenticated
+  }
+};
+
+router.post("/saveHorse", async (req, res) => {
+  const currentUser = getCurrentUser(req); // Get the authenticated user
+
+  if (!currentUser) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  const { horseData } = req.body; // Expecting horseData to be an object with horse details like age, sire, dam, etc.
+
+  try {
+    // Update the current user's document by adding the horse data to an array
+    const result = await User.updateOne(
+      { _id: currentUser._id }, // Find the user by their ID
+      { $addToSet: { savedHorses: horseData } } // Add horseData to 'savedHorses' array, avoiding duplicates
+    );
+
+    if (result.nModified === 0) {
+      return res
+        .status(400)
+        .json({ message: "Horse already saved or user not found" });
+    }
+
+    res.status(201).json({ message: "Horse saved successfully" });
+  } catch (error) {
+    console.error("Error saving horse:", error);
+    res.status(500).json({ error: "Failed to save horse" });
+  }
+});
+
+
+
+
+
 
 /**
  * -------------- GET ROUTES ----------------
  */
+
+
 
 router.get("/", (req, res, next) => {
   res.send('<h1>Home</h1><p>Please <a href="/register">register</a></p>');

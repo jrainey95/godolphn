@@ -57,3 +57,15 @@ export const getAccount = async () => {
     throw error;
   }
 };
+
+export const saveHorse = async (horseData) => {
+  try {
+    const response = await API.post("/saveHorse", { horseData }, {
+      withCredentials: true,
+    });
+    return response.data; // Handle success message if needed
+  } catch (error) {
+    console.error("Error saving horse:", error);
+    throw error;
+  }
+}
